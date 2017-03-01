@@ -17,14 +17,28 @@ describe('AbstractEntityHalifier', () => {
     describe('makeNextPrevLinks()', () => {
       it('works with minimal empty setup', () => {
         const halifier = new Halifier({}, {name: 'human', baseUrl: '/people'})
-        const proto = {_listMeta: {totalCount: 50, query: {}, offset: 0, limit: 20}}
+        const proto = {
+          _listMeta: {
+            stats: {total: 50, returned: 10},
+            query: {},
+            offset: 0,
+            limit: 20
+          }
+        }
         const links = halifier.makeNextPrevLinks([], proto)
         expect(links.next).toBeDefined()
         expect(links.prev).not.toBeDefined()
       })
       it('uses offset', () => {
         const halifier = new Halifier({}, {name: 'human', baseUrl: '/people'})
-        const proto = {_listMeta: {totalCount: 50, query: {}, offset: 20, limit: 10}}
+        const proto = {
+          _listMeta: {
+            stats: {total: 50, returned: 10},
+            query: {},
+            offset: 20,
+            limit: 10
+          }
+        }
         const links = halifier.makeNextPrevLinks([], proto)
         expect(links.next).toBeDefined()
         expect(links.next.href).toBe('/people?limit=10&offset=30')
