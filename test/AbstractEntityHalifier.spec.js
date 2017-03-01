@@ -2,12 +2,17 @@
 const Halifier = require('../src/AbstractEntityHalifier')
 
 describe('AbstractEntityHalifier', () => {
-  it('creates self link by default', () => {
+  it('creates self link by default', done => {
     const halifier = new Halifier({}, {name: 'human', baseUrl: '/people'})
-    const result = halifier.halifySingle({id: 'AB543', firstName: 'John'})
-    expect(result._links).toBeDefined()
-    expect(result._links.self).toEqual({href: '/people/AB543', title: 'get single human'})
+    halifier.halifySingle({id: 'AB543', firstName: 'John'})
+      .then(result => {
+        expect(result._links).toBeDefined()
+        expect(result._links.self).toEqual({href: '/people/AB543', title: 'get single human'})
+        done()
+      })
+      .catch(done.fail)
   })
+
   describe('lists', () => {
     describe('makeNextPrevLinks()', () => {
       it('works with minimal empty setup', () => {

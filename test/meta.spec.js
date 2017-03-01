@@ -2,18 +2,16 @@
 const meta = require('../src/meta')
 
 describe('meta', () => {
-  describe('getListMetaFromReq()', () => {
+  describe('makeListMeta()', () => {
     it('reads values from query', () => {
-      const req = {query: {limit: 17, offset: 5}}
-      const opts = {autoLimit: 50}
-      const listMeta = meta.getListMetaFromReq(req, opts)
-      expect(listMeta.limit).toBe(17)
-      expect(listMeta.offset).toBe(5)
+      const req = {query: {apple: 17}}
+      const opts = {limit: 50}
+      const listMeta = meta.makeListMeta(req.query, opts)
+      expect(listMeta.query.apple).toBe(17)
     })
     it('sets default values', () => {
-      const req = {query: {}}
-      const opts = {autoLimit: 50}
-      const listMeta = meta.getListMetaFromReq(req, opts)
+      const opts = {limit: 50}
+      const listMeta = meta.makeListMeta(null, opts)
       expect(listMeta.limit).toBe(50)
       expect(listMeta.offset).toBe(0)
     })

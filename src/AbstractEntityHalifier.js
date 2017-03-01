@@ -13,8 +13,7 @@ class AbstractEntityHalifier {
   }
 
   getId (entity) {
-    // another typical would be entity[this.opts.name + '_id']
-    return entity.id
+    return this.opts.idFieldName ? entity[this.opts.idFieldName] : entity.id
   }
 
   makeLinkForListFromQuery (query) {
@@ -24,8 +23,8 @@ class AbstractEntityHalifier {
   makeNextPrevLinks (list, proto) {
     const result = {}
     const meta = proto._listMeta
-    if (!meta.query || !meta.totalCount) {
-      throw new Error('default implementation requires _listMeta.query and _listMeta.totalCount')
+    if (!meta.query || !meta.stats) {
+      throw new Error('default implementation requires _listMeta.query and _listMeta.stats')
     }
     const query = Object.assign({limit: meta.limit}, meta.query)
 
@@ -39,7 +38,7 @@ class AbstractEntityHalifier {
       }
     }
 
-    if (meta.offset + list.length < meta.totalCount) {
+    if (meta.offset + list.length < meta.stats.total) {
       query.offset = meta.offset + meta.limit
       result.next = {
         href: this.makeLinkForListFromQuery(query)
@@ -59,46 +58,64 @@ class AbstractEntityHalifier {
   }
 
   makeProtoFromReq (req) {
-    const listMeta = meta.getListMetaFromReq(req, this.opts)
+    const listMeta = meta.makeListMeta(req.query, this.opts)
     return {
       _listMeta: listMeta
     }
   }
 
   getLinksForList (list, proto) {
-    const listMeta = Object.assign(
-      {},
-      proto._listMeta,
-      this.makeNextPrevLinks(list, proto)
-    )
-    return listMeta
+    return this.makeNextPrevLinks(list, proto)
   }
 
+  getListName () {
+    return this.opts.name + 's'
+  }
+
+  /**
+   * @return {Promise}
+   */
   getEmbeddedForList (list, proto) {
-    return {
-      [this.opts.name]: list.map(entity => this.halifyListItem(entity))
-    }
+    return Promise.all(
+      list.map(entity => this.halifyListItem(entity))
+    )
+      .then(embeddedArray => ({
+        [this.getListName()]: embeddedArray
+      }))
   }
 
+  /**
+   * @return {Promise}
+   */
   halifyListItem (entity) {
     return this.halifySingle(entity)
   }
 
+  /**
+   * @return {Promise}
+   */
   halifySingle (entity) {
-    return Object.assign(
+    if (entity.toHal) {
+      return Promise.resolve(entity.toHal())
+    }
+    return Promise.resolve(Object.assign(
       {_links: this.getLinksForSingle(entity)},
       entity
-    )
+    ))
   }
 
+  /**
+   * @return {Promise}
+   */
   halifyList (list, proto) {
-    return Object.assign(
-      {
-        _links: this.getLinksForList(list, proto),
-        _embedded: this.getEmbeddedForList(list, proto)
-      },
-      proto
-    )
+    return this.getEmbeddedForList(list, proto)
+      .then(embedded => Object.assign(
+        {
+          _links: this.getLinksForList(list, proto),
+          _embedded: embedded
+        },
+        proto
+      ))
   }
 }
 
