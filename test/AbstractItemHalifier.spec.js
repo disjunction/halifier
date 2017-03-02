@@ -1,7 +1,7 @@
 /* eslint-env jasmine */
-const Halifier = require('../src/AbstractEntityHalifier')
+const Halifier = require('../src/AbstractItemHalifier')
 
-describe('AbstractEntityHalifier', () => {
+describe('AbstractItemHalifier', () => {
   it('creates self link by default', done => {
     const halifier = new Halifier({}, {name: 'human', baseUrl: '/people'})
     halifier.halifySingle({id: 'AB543', firstName: 'John'})

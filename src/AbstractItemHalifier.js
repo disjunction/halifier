@@ -1,19 +1,19 @@
 const querystring = require('querystring')
 const meta = require('./meta')
 
-class AbstractEntityHalifier {
+class AbstractItemHalifier {
   /**
    * @param {Object} app - provides app context
    * @param {Object} opts
    * @param {String} opts.baseUrl - entities base url, e.g. /people
-   * @param {String} [opts.name] - entity name
+   * @param {String} [opts.name] - item name
    */
   constructor (app, opts) {
     Object.assign(this, {app, opts})
   }
 
-  getId (entity) {
-    return this.opts.idFieldName ? entity[this.opts.idFieldName] : entity.id
+  getId (item) {
+    return this.opts.idFieldName ? item[this.opts.idFieldName] : item.id
   }
 
   makeLinkForListFromQuery (query) {
@@ -48,10 +48,10 @@ class AbstractEntityHalifier {
     return result
   }
 
-  getLinksForSingle (entity) {
+  getLinksForSingle (item) {
     return {
       self: {
-        href: this.opts.baseUrl + '/' + this.getId(entity),
+        href: this.opts.baseUrl + '/' + this.getId(item),
         title: 'get single ' + this.opts.name
       }
     }
@@ -77,7 +77,7 @@ class AbstractEntityHalifier {
    */
   getEmbeddedForList (list, proto) {
     return Promise.all(
-      list.map(entity => this.halifyListItem(entity))
+      list.map(item => this.halifyListItem(item))
     )
       .then(embeddedArray => ({
         [this.getListName()]: embeddedArray
@@ -85,22 +85,24 @@ class AbstractEntityHalifier {
   }
 
   /**
+   * returns a HAL representation of an item
+   * in many cases embedded list items have a shorter
+   * list of properties than when requesting requesting
+   * a single item. This is why it has a separate method
+   * @oaram {Object} item
    * @return {Promise}
    */
-  halifyListItem (entity) {
-    return this.halifySingle(entity)
+  halifyListItem (item) {
+    return this.halifyItem(item)
   }
 
   /**
    * @return {Promise}
    */
-  halifySingle (entity) {
-    if (entity.toHal) {
-      return Promise.resolve(entity.toHal())
-    }
+  halifyItem (item) {
     return Promise.resolve(Object.assign(
-      {_links: this.getLinksForSingle(entity)},
-      entity
+      {_links: this.getLinksForSingle(item)},
+      item
     ))
   }
 
@@ -119,4 +121,4 @@ class AbstractEntityHalifier {
   }
 }
 
-module.exports = AbstractEntityHalifier
+module.exports = AbstractItemHalifier

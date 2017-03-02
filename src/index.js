@@ -1,3 +1,5 @@
 module.exports = {
-  meta: require('./meta')
+  meta: require('./meta'),
+  AbstractItemHalifier: require('./AbstractItemHalifier'),
+  AbstractHalController: require('./AbstractHalController')
 }

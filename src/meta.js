@@ -33,15 +33,21 @@ function extrasFromProps (x) {
 
 function makeListMeta (query, options) {
   options = options || {}
+  query = query || {}
   const listMeta = {
-    limit: options.limit || 20,
-    offset: options.offset || 0,
-    query: query || {}
+    limit: query.limit || (options.listMeta && options.listMeta.limit) || 20,
+    offset: query.offset || (options.listMeta && options.listMeta.offset) || 0
   }
 
   if (options.order) {
     listMeta.order = options.order
   }
+
+  query = Object.assign({}, query)
+  delete query.limit
+  delete query.offset
+  delete query.order
+  listMeta.query = query
 
   return listMeta
 }
