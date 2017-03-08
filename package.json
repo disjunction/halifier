@@ -1,15 +1,20 @@
 {
   "name": "halifier",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "helper toolset for building HAL API with express",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Konstantin Pogorelov <or@pluseq.com> (https://github.com/disjunction)",
-  "license": "ISC",
+  "author": "The Experimentalis <or@pluseq.com> (https://github.com/disjunction)",
+  "license": "WTFPL",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/disjunction/halifier.git"
+  },
   "dependencies": {
-    "ramda": "^0.23.0"
+    "ramda": "^0.23.0",
+    "string-natural-compare": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^3.16.1",

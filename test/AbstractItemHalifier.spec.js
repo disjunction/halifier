@@ -4,7 +4,7 @@ const Halifier = require('../src/AbstractItemHalifier')
 describe('AbstractItemHalifier', () => {
   it('creates self link by default', done => {
     const halifier = new Halifier({}, {name: 'human', baseUrl: '/people'})
-    halifier.halifySingle({id: 'AB543', firstName: 'John'})
+    halifier.halifyItem({id: 'AB543', firstName: 'John'})
       .then(result => {
         expect(result._links).toBeDefined()
         expect(result._links.self).toEqual({href: '/people/AB543', title: 'get single human'})

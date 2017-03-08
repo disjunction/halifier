@@ -58,8 +58,8 @@ class AbstractHalController {
   }
 
   getItemAction (req, res, next) {
-    this.validateDataProviderMethods(['findOneById'])
-    return this.opts.dataProvider.findOneById(req.params.id)
+    this.validateDataProviderMethods(['findById'])
+    return this.opts.dataProvider.findById(req.params.id)
       .then(item => this.opts.itemHalifier.halifyItem(item))
       .then(result => res.json(result))
       .catch(next)
