@@ -26,8 +26,8 @@ function whereFromHyphened (x) {
 
 function extrasFromProps (x) {
   return R.mergeAll(
-    x.limit ? {limit: x.limit} : undefined,
-    x.offset ? {offset: x.offset} : undefined
+    x.limit ? {limit: parseInt(x.limit)} : undefined,
+    x.offset ? {offset: parseInt(x.offset)} : undefined
   )
 }
 
@@ -35,8 +35,8 @@ function makeListMeta (query, options) {
   options = options || {}
   query = query || {}
   const listMeta = {
-    limit: query.limit || (options.listMeta && options.listMeta.limit) || 20,
-    offset: query.offset || (options.listMeta && options.listMeta.offset) || 0
+    limit: parseInt(query.limit || (options.listMeta && options.listMeta.limit) || 20),
+    offset: parseInt(query.offset || (options.listMeta && options.listMeta.offset) || 0)
   }
 
   if (options.order) {
