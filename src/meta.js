@@ -39,14 +39,17 @@ function makeListMeta (query, options) {
     offset: parseInt(query.offset || (options.listMeta && options.listMeta.offset) || 0)
   }
 
-  if (options.order) {
-    listMeta.order = options.order
+  const order = query.order || options.order
+  if (order) {
+    listMeta.order = order
+    listMeta.direction = query.direction || options.direction || 'ASC'
   }
 
   query = Object.assign({}, query)
   delete query.limit
   delete query.offset
   delete query.order
+  delete query.direction
   listMeta.query = query
 
   return listMeta

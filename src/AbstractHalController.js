@@ -68,11 +68,11 @@ class AbstractHalController {
   getListAction (req, res, next) {
     this.validateDataProviderMethods(['runListQuery'])
     this.validateItemHalifierMethods(['makeProtoFromReq', 'halifyList'])
-    const reponseProto = this.opts.itemHalifier.makeProtoFromReq(req)
-    this.opts.dataProvider.runListQuery(reponseProto._listMeta)
+    const responseProto = this.opts.itemHalifier.makeProtoFromReq(req)
+    this.opts.dataProvider.runListQuery(responseProto._listMeta)
       .then(([result, newListMeta]) => {
-        reponseProto._listMeta = newListMeta
-        return this.opts.itemHalifier.halifyList(result, reponseProto)
+        responseProto._listMeta = newListMeta
+        return this.opts.itemHalifier.halifyList(result, responseProto)
       })
       .then(result => res.json(result))
       .catch(next)
