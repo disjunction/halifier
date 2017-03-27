@@ -9,6 +9,18 @@ describe('meta', () => {
       const listMeta = meta.makeListMeta(req.query, opts)
       expect(listMeta.query.apple).toBe(17)
     })
+
+    it('reads order and direction', () => {
+      const req = {query: {order: 'name,time asc', direction: 'desc'}}
+      const opts = {listMeta: {limit: 50}}
+      const listMeta = meta.makeListMeta(req.query, opts)
+      expect(listMeta.order).toEqual([
+        {name: 'desc'},
+        {time: 'asc'}
+      ])
+      expect(listMeta.direction).toBe('desc')
+    })
+
     it('sets default values', () => {
       const opts = {listMeta: {limit: 50}}
       const listMeta = meta.makeListMeta(null, opts)
@@ -16,6 +28,7 @@ describe('meta', () => {
       expect(listMeta.offset).toBe(0)
     })
   })
+
   describe('extrasFromHyphened()', () => {
     it('reads limit', () => {
       const query = meta.extrasFromHyphened({

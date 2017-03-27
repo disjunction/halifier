@@ -41,8 +41,11 @@ function makeListMeta (query, options) {
 
   const order = query.order || options.order
   if (order) {
-    listMeta.order = order
-    listMeta.direction = query.direction || options.direction || 'ASC'
+    listMeta.direction = query.direction || options.direction || 'asc'
+    listMeta.order = String(order).split(',').map(orderField => {
+      const parts = orderField.split(' ')
+      return {[parts[0]]: R.nth(1, parts) || listMeta.direction}
+    })
   }
 
   query = Object.assign({}, query)
