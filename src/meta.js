@@ -39,7 +39,7 @@ function makeListMeta (query, options) {
     offset: parseInt(query.offset || (options.listMeta && options.listMeta.offset) || 0)
   }
 
-  const order = query.order || options.order
+  const order = query.order || options.listMeta.order
   if (order) {
     listMeta.direction = query.direction || options.direction || 'asc'
     listMeta.order = String(order).split(',').map(orderField => {
