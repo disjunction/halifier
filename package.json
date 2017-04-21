@@ -1,6 +1,6 @@
 {
   "name": "halifier",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "helper toolset for building HAL API with express",
   "main": "src/index.js",
   "scripts": {

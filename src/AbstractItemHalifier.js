@@ -100,8 +100,10 @@ class AbstractItemHalifier {
    * @return {Promise}
    */
   halifyItem (item) {
+    const linksForSingle = this.getLinksForSingle(item)
     return Promise.resolve(Object.assign(
-      {_links: this.getLinksForSingle(item)},
+      {},
+      linksForSingle ? {_links: linksForSingle} : undefined,
       item
     ))
   }
